@@ -12,16 +12,16 @@ square=0
 cube=0
 
 entered_number = ""  # String to store the concatenated number
-last_detection_time = time.time()  # Track the time of the last detection
+last_detection_time = time.time()  
 delay_seconds = 2  # Set delay time to 2 seconds
 
 def is_c_gesture(landmarks):
-    # Thumb landmarks
+   
     thumb_tip = landmarks[4]
     thumb_ip = landmarks[3]
     thumb_mcp = landmarks[2]
 
-    # Index finger landmarks
+   
     index_tip = landmarks[8]
     index_dip = landmarks[7]
     index_pip = landmarks[6]
@@ -33,7 +33,7 @@ def is_c_gesture(landmarks):
     # Check index finger curved shape
     index_curved = index_tip.y > index_dip.y > index_pip.y
 
-    # Check for a semi-circle or "C" shape
+    # Check for a fist shape
     if thumb_curved and thumb_near_index and index_curved:
         return True
     return False
@@ -47,8 +47,7 @@ while cap.isOpened():
         break
 
     total_fingers = 0
-    
-    # Flip the image horizontally for a later selfie-view display
+
     frame = cv2.flip(frame, 1)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     
@@ -63,7 +62,7 @@ while cap.isOpened():
 
             if is_c_gesture(hand_landmarks.landmark):
 
-                entered_number = ""  # Clear the number if C gesture is detected
+                entered_number = ""  # Clear the number if fist gesture is detected
                 square = 0
                 cube = 0
                 cv2.putText(frame, ' Number Cleared', (50, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
@@ -80,10 +79,9 @@ while cap.isOpened():
                 else:
                     finger_states.append(0)  # Finger is closed
             
-            # Thumb requires a different comparison for x-coordinates
             thumb_is_up = 0
 
-            # Thumb curled detection using y-coordinates and distance from the base of the index finger
+            
             thumb_tip = landmarks[4]
             thumb_mcp = landmarks[2]
             index_finger_mcp = landmarks[5]
